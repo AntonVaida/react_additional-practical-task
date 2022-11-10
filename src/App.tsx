@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import { ProductWithCategory } from './types/ProductWithCategory';
+import { ProductTable } from './components/ProductTable';
 
 import productsFromServer from './api/products';
 import categoriesFromServer from './api/categories';
+import { AddProductForm } from './components/AddProductForm';
 
 const findCategoryById = (categoryId: number) => {
   const foundCategory = categoriesFromServer.find(category => (
@@ -21,12 +23,31 @@ const productsWithCategories: ProductWithCategory[] = productsFromServer.map(
 );
 
 export const App: React.FC = () => {
+const [productList, setProductList] = useState(productsWithCategories)
+const [selectCategory, setSelectCategory] = useState('Grocery');
+const [qwery, setQwery] = useState('');
+
+const handleSabmit = () => {
+const newCategory = categoriesFromServer.find(
+  category => category.title === selectCategory
+  );
+  const maxId = productsFromServer.sort((a, b) => b.id - a.id)[0].id;
+const newProduct = {
+  id: maxId + 1,
+  name: qwery,
+  category: newCategory,
+  categoryId: newCategory.id
+}
+
+setProductList(current => [...current, newProduct])
+}
+
   return (
     <div className="section">
       <div className="container">
         <h1 className="title">Product Categories</h1>
 
-        <form className="form">
+        {/* <form className="form">
           <div className="field">
             <div className="control">
               <input
@@ -61,9 +82,15 @@ export const App: React.FC = () => {
               </button>
             </div>
           </div>
-        </form>
+        </form> */}
+        <AddProductForm
+          qwery={qwery}
+          setQwery={setQwery}
+          selectCategory={selectCategory}
+          setSelectCategory={setSelectCategory}
+        />
 
-        <table
+        {/* <table
           className="table is-striped is-narrow is-fullwidth"
         >
           <thead>
@@ -102,7 +129,8 @@ export const App: React.FC = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
+        <ProductTable productsWithCategories={productList} />
       </div>
     </div>
   );
