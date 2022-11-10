@@ -36,10 +36,10 @@ const newProduct = {
   id: maxId + 1,
   name: qwery,
   category: newCategory,
-  categoryId: newCategory.id
+  categoryId: newCategory?.id
 }
 
-setProductList(current => [...current, newProduct])
+// setProductList(current => [...current, newProduct])
 }
 
   return (
